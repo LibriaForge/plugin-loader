@@ -1,0 +1,5 @@
+{
+  "name": "esm-plugin",
+  "pluginType": "test",
+  "module": "./dist/index.mjs"
+}

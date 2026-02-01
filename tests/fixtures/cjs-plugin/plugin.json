@@ -1,0 +1,5 @@
+{
+  "name": "cjs-plugin",
+  "pluginType": "test",
+  "main": "./dist/index.cjs"
+}

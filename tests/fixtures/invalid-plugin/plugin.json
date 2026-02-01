@@ -1,0 +1,5 @@
+{
+  "name": "invalid-plugin",
+  "pluginType": "test",
+  "module": "./dist/index.mjs"
+}
