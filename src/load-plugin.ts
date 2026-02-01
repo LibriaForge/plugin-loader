@@ -17,7 +17,7 @@ export async function loadPlugin<T = unknown>(
     let mod: any;
     let lastError: unknown;
 
-    // 1️⃣ Try ESM first
+    // 1 Try ESM first
     if (manifest.module) {
         try {
             const esmPath = path.resolve(manifest.__dir, manifest.module);
@@ -27,7 +27,7 @@ export async function loadPlugin<T = unknown>(
         }
     }
 
-    // 2️⃣ Fallback to CJS
+    // 2 Fallback to CJS
     if (!mod && manifest.main) {
         try {
             const cjsPath = path.resolve(manifest.__dir, manifest.main);

@@ -64,6 +64,7 @@
     "vitest": "^4.0.18"
   },
   "dependencies": {
+    "fast-glob": "^3.3.3",
     "fs-extra": "^11.3.3"
   }
 }
