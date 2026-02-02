@@ -24,7 +24,8 @@
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write .",
     "test:coverage": "vitest --coverage",
-    "clean": "npm run lint:fix && npm run format"
+    "clean": "npm run lint:fix && npm run format",
+    "build-and-publish": "npm run build && npx @libria/clean-publish build && npx @libria/clean-publish publish"
   },
   "repository": {
     "type": "git",
