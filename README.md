@@ -1,6 +1,7 @@
 # @libria/plugin-loader
 
 A simple, type-safe plugin loader for Node.js applications. Supports both ESM and CommonJS plugins with glob pattern discovery.
+
 ![Version](https://img.shields.io/npm/v/@libria/plugin-loader)
 ![License](https://img.shields.io/npm/l/@libria/plugin-loader)
 
