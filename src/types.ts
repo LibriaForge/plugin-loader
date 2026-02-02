@@ -1,6 +1,6 @@
 export interface LibriaPlugin<T = unknown> {
     readonly pluginType: string;
-    readonly name?: string;
+    readonly name: string;
     readonly api: T;
 }
 
