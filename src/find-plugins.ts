@@ -1,12 +1,11 @@
-import {PluginManifest} from "./types";
-import fs from "fs-extra";
-import fg from "fast-glob";
-import path from "path";
+import path from 'path';
 
-export async function findPlugins(
-    pattern: string,
-    pluginType?: string
-): Promise<PluginManifest[]> {
+import fg from 'fast-glob';
+import fs from 'fs-extra';
+
+import { PluginManifest } from './types';
+
+export async function findPlugins(pattern: string, pluginType?: string): Promise<PluginManifest[]> {
     const manifests: PluginManifest[] = [];
 
     // Check if pattern is a glob pattern or a simple path
@@ -32,13 +31,27 @@ export async function findPlugins(
 
             manifests.push({
                 ...raw,
-                __dir: dir
+                __dir: dir,
             });
         }
     } else {
-        // Original behavior for simple directory paths
+        // Simple directory path - check if it exists
         if (!(await fs.pathExists(pattern))) return [];
 
+        // First, check if the directory itself is a plugin (has plugin.json)
+        const directManifestPath = path.join(pattern, 'plugin.json');
+        if (await fs.pathExists(directManifestPath)) {
+            const raw = await fs.readJson(directManifestPath);
+            if (!pluginType || raw.pluginType === pluginType) {
+                manifests.push({
+                    ...raw,
+                    __dir: path.resolve(pattern),
+                });
+            }
+            return manifests;
+        }
+
+        // Otherwise, scan subdirectories for plugins
         const entries = await fs.readdir(pattern);
 
         for (const entry of entries) {
@@ -56,7 +69,7 @@ export async function findPlugins(
 
             manifests.push({
                 ...raw,
-                __dir: fullPath
+                __dir: fullPath,
             });
         }
     }

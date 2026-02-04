@@ -1,0 +1,7 @@
+{
+  "id": "plugin-c",
+  "name": "Plugin C",
+  "pluginType": "test",
+  "version": "2.1.0",
+  "module": "./dist/index.mjs"
+}

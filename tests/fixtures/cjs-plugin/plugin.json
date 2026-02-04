@@ -1,5 +1,7 @@
 {
-  "name": "cjs-plugin",
+  "id": "cjs-plugin",
+  "name": "CJS Plugin",
   "pluginType": "test",
+  "version": "1.0.0",
   "main": "./dist/index.cjs"
 }

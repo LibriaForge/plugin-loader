@@ -1,6 +1,6 @@
 {
   "name": "@libria/plugin-loader",
-  "version": "0.1.0",
+  "version": "2.0.0-alpha",
   "description": "Simple plugin loader for Node.js applications",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
@@ -24,7 +24,8 @@
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write .",
     "test:coverage": "vitest --coverage",
-    "clean": "npm run lint:fix && npm run format"
+    "clean": "npm run lint:fix && npm run format",
+    "build-and-publish": "npm run build && npx @libria/clean-publish build && npx @libria/clean-publish publish"
   },
   "repository": {
     "type": "git",
@@ -48,6 +49,7 @@
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^25.0.10",
     "@types/qs": "^6.14.0",
+    "@types/semver": "^7.7.1",
     "@typescript-eslint/eslint-plugin": "^8.53.1",
     "@typescript-eslint/parser": "^8.53.1",
     "@vitest/coverage-v8": "^4.0.18",
@@ -64,7 +66,9 @@
     "vitest": "^4.0.18"
   },
   "dependencies": {
+    "chokidar": "^5.0.0",
     "fast-glob": "^3.3.3",
-    "fs-extra": "^11.3.3"
+    "fs-extra": "^11.3.3",
+    "semver": "^7.7.3"
   }
 }
