@@ -1,6 +1,6 @@
 {
   "name": "@libria/plugin-loader",
-  "version": "2.0.0-alpha.0",
+  "version": "2.0.0-alpha",
   "description": "Simple plugin loader for Node.js applications",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
