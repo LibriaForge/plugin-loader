@@ -1,0 +1,10 @@
+{
+  "id": "plugin-x",
+  "name": "Plugin X",
+  "pluginType": "test",
+  "version": "1.0.0",
+  "module": "./dist/index.mjs",
+  "dependencies": [
+    { "id": "plugin-y", "version": "^1.0.0" }
+  ]
+}

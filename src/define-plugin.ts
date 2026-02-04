@@ -1,13 +1,5 @@
-import {LibriaPlugin} from "./types";
+import { PluginFactory } from './types';
 
-export function definePlugin<T>(
-    pluginType: string,
-    name: string,
-    api: T
-): LibriaPlugin<T> {
-    return {
-        pluginType: pluginType,
-        name,
-        api
-    };
+export function definePlugin<T>(factory: PluginFactory<T>): PluginFactory<T> {
+    return factory;
 }

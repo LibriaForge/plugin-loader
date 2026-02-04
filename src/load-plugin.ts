@@ -1,23 +1,27 @@
-import {
-    LibriaPlugin,
-    PluginManifest,
-    PluginLoadError,
-    PluginInvalidExportError,
-    PluginTypeMismatchError
-} from "./types";
-import path from "path";
-import {pathToFileURL} from "url";
-import {createRequire} from "node:module";
+import { createRequire } from 'node:module';
+import path from 'path';
+import { pathToFileURL } from 'url';
+
+import { PluginFactory, PluginInvalidExportError, PluginLoadError, PluginManifest } from './types';
 
 const require = createRequire(import.meta.url);
 
-export async function loadPlugin<T = unknown>(
-    manifest: PluginManifest
-): Promise<LibriaPlugin<T>> {
-    let mod: any;
+function isPluginFactory(obj: unknown): obj is PluginFactory {
+    return (
+        typeof obj === 'object' &&
+        obj !== null &&
+        'id' in obj &&
+        'pluginType' in obj &&
+        'create' in obj &&
+        typeof (obj as PluginFactory).create === 'function'
+    );
+}
+
+export async function loadPlugin<T = unknown>(manifest: PluginManifest): Promise<PluginFactory<T>> {
+    let mod: unknown;
     let lastError: unknown;
 
-    // 1 Try ESM first
+    // 1. Try ESM first
     if (manifest.module) {
         try {
             const esmPath = path.resolve(manifest.__dir, manifest.module);
@@ -27,7 +31,7 @@ export async function loadPlugin<T = unknown>(
         }
     }
 
-    // 2 Fallback to CJS
+    // 2. Fallback to CJS
     if (!mod && manifest.main) {
         try {
             const cjsPath = path.resolve(manifest.__dir, manifest.main);
@@ -38,23 +42,16 @@ export async function loadPlugin<T = unknown>(
     }
 
     if (!mod) {
-        throw new PluginLoadError(manifest.name, lastError);
+        throw new PluginLoadError(manifest.id, lastError);
     }
 
-    // 3️⃣ Normalize export
-    const plugin = (mod.default ?? mod) as LibriaPlugin<T>;
+    // 3. Normalize export
+    const moduleWithDefault = mod as { default?: unknown };
+    const factory = (moduleWithDefault.default ?? mod) as PluginFactory<T>;
 
-    if (!plugin || typeof plugin !== 'object') {
-        throw new PluginInvalidExportError(manifest.name);
+    if (!isPluginFactory(factory)) {
+        throw new PluginInvalidExportError(manifest.id);
     }
 
-    if (plugin.pluginType !== manifest.pluginType) {
-        throw new PluginTypeMismatchError(
-            manifest.name,
-            manifest.pluginType,
-            plugin.pluginType
-        );
-    }
-
-    return plugin;
+    return factory;
 }

@@ -92,7 +92,7 @@ export default tseslint.config(
             // 'import/no-unused-modules': ['warn', { unusedExports: true }],
 
             // Additional helpful rules
-            'no-console': ['warn', { allow: ['warn', 'error'] }],
+            'no-console': ['warn', {allow: ['warn', 'error']}],
             '@typescript-eslint/no-explicit-any': 'warn',
             '@typescript-eslint/no-non-null-assertion': 'warn',
             'prefer-const': 'error',
@@ -101,6 +101,6 @@ export default tseslint.config(
     },
     {
         // Ignore patterns (replaces .eslintignore)
-        ignores: ['node_modules/**', 'dist/**', 'build/**', '*.config.js', 'coverage/**', 'scripts/**'],
+        ignores: ['node_modules/**', 'dist/**', 'build/**', '*.config.js', 'coverage/**', 'scripts/**', '.tmp-clean-publish/**', 'tests/fixtures/**'],
     }
 );

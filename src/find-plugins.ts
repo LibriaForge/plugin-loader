@@ -1,12 +1,11 @@
-import {PluginManifest} from "./types";
-import fs from "fs-extra";
-import fg from "fast-glob";
-import path from "path";
+import path from 'path';
 
-export async function findPlugins(
-    pattern: string,
-    pluginType?: string
-): Promise<PluginManifest[]> {
+import fg from 'fast-glob';
+import fs from 'fs-extra';
+
+import { PluginManifest } from './types';
+
+export async function findPlugins(pattern: string, pluginType?: string): Promise<PluginManifest[]> {
     const manifests: PluginManifest[] = [];
 
     // Check if pattern is a glob pattern or a simple path
@@ -32,7 +31,7 @@ export async function findPlugins(
 
             manifests.push({
                 ...raw,
-                __dir: dir
+                __dir: dir,
             });
         }
     } else {
@@ -56,7 +55,7 @@ export async function findPlugins(
 
             manifests.push({
                 ...raw,
-                __dir: fullPath
+                __dir: fullPath,
             });
         }
     }
