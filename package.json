@@ -66,6 +66,7 @@
     "vitest": "^4.0.18"
   },
   "dependencies": {
+    "chokidar": "^5.0.0",
     "fast-glob": "^3.3.3",
     "fs-extra": "^11.3.3",
     "semver": "^7.7.3"

@@ -4,6 +4,7 @@ import {
     CircularDependencyError,
     DependencyNotFoundError,
     DuplicatePluginError,
+    ManifestNotFoundError,
     PluginInvalidExportError,
     PluginLoadError,
     PluginNotFoundError,
@@ -87,9 +88,25 @@ describe('Error classes', () => {
 
             expect(error).toBeInstanceOf(Error);
             expect(error).toBeInstanceOf(PluginNotFoundError);
+            expect(error.name).toBe('PluginNotFoundError');
             expect(error.id).toBe('missing-plugin');
             expect(error.message).toContain('missing-plugin');
             expect(error.message).toContain('not found');
+        });
+    });
+
+    describe('ManifestNotFoundError', () => {
+        it('creates error with plugin id and directory', () => {
+            const error = new ManifestNotFoundError('my-plugin', '/path/to/plugin');
+
+            expect(error).toBeInstanceOf(Error);
+            expect(error).toBeInstanceOf(ManifestNotFoundError);
+            expect(error.name).toBe('ManifestNotFoundError');
+            expect(error.pluginId).toBe('my-plugin');
+            expect(error.dir).toBe('/path/to/plugin');
+            expect(error.message).toContain('my-plugin');
+            expect(error.message).toContain('/path/to/plugin');
+            expect(error.message).toContain('Manifest not found');
         });
     });
 
@@ -178,6 +195,7 @@ describe('Error classes', () => {
                 new PluginTypeMismatchError('test', 'a', 'b'),
                 new DuplicatePluginError('test'),
                 new PluginNotFoundError('test'),
+                new ManifestNotFoundError('test', '/path'),
                 new CircularDependencyError(['a', 'b']),
                 new DependencyNotFoundError('test'),
                 new VersionMismatchError('test', '1.0.0', '2.0.0'),

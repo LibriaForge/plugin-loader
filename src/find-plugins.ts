@@ -35,9 +35,23 @@ export async function findPlugins(pattern: string, pluginType?: string): Promise
             });
         }
     } else {
-        // Original behavior for simple directory paths
+        // Simple directory path - check if it exists
         if (!(await fs.pathExists(pattern))) return [];
 
+        // First, check if the directory itself is a plugin (has plugin.json)
+        const directManifestPath = path.join(pattern, 'plugin.json');
+        if (await fs.pathExists(directManifestPath)) {
+            const raw = await fs.readJson(directManifestPath);
+            if (!pluginType || raw.pluginType === pluginType) {
+                manifests.push({
+                    ...raw,
+                    __dir: path.resolve(pattern),
+                });
+            }
+            return manifests;
+        }
+
+        // Otherwise, scan subdirectories for plugins
         const entries = await fs.readdir(pattern);
 
         for (const entry of entries) {

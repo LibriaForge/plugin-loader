@@ -25,7 +25,9 @@ export async function loadPlugin<T = unknown>(manifest: PluginManifest): Promise
     if (manifest.module) {
         try {
             const esmPath = path.resolve(manifest.__dir, manifest.module);
-            mod = await import(pathToFileURL(esmPath).href);
+            const fileUrl = pathToFileURL(esmPath).href;
+            // Add timestamp to bust ESM cache for hot-reload
+            mod = await import(`${fileUrl}?t=${Date.now()}`);
         } catch (err) {
             lastError = err;
         }
@@ -35,6 +37,8 @@ export async function loadPlugin<T = unknown>(manifest: PluginManifest): Promise
     if (!mod && manifest.main) {
         try {
             const cjsPath = path.resolve(manifest.__dir, manifest.main);
+            // Clear CJS cache before requiring
+            delete require.cache[require.resolve(cjsPath)];
             mod = require(cjsPath);
         } catch (err) {
             lastError = err;
@@ -54,4 +58,21 @@ export async function loadPlugin<T = unknown>(manifest: PluginManifest): Promise
     }
 
     return factory;
+}
+
+/**
+ * Clear the module cache for a plugin (used for hot-reload)
+ */
+export function clearPluginCache(manifest: PluginManifest): void {
+    // Clear CJS cache
+    if (manifest.main) {
+        const cjsPath = path.resolve(manifest.__dir, manifest.main);
+        try {
+            delete require.cache[require.resolve(cjsPath)];
+        } catch {
+            // Ignore if not in cache
+        }
+    }
+
+    // ESM cache is handled by timestamp query param in loadPlugin
 }

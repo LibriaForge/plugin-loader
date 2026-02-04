@@ -1,4 +1,12 @@
-export interface LibriaPlugin<T = unknown> {
+// Lifecycle hooks that plugins can implement
+export interface PluginLifecycle {
+    /** Called after the plugin is registered and ready to use */
+    onLoad?(): void | Promise<void>;
+    /** Called before the plugin is unloaded (for hot-reload or shutdown) */
+    onUnload?(): void | Promise<void>;
+}
+
+export interface LibriaPlugin<T = unknown> extends PluginLifecycle {
     api: T;
 }
 
@@ -7,12 +15,25 @@ export interface PluginFactory<T = unknown> {
     readonly pluginType: string;
     readonly name?: string;
 
-    create<C extends PluginContext>(ctx: C): LibriaPlugin<T>;
+    /** Create the plugin instance. Can be sync or async. */
+    create<C extends PluginContext>(ctx: C): LibriaPlugin<T> | Promise<LibriaPlugin<T>>;
 }
 
 export interface PluginContext {
     getPlugin<T = unknown>(id: string): T;
     hasPlugin(id: string): boolean;
+}
+
+/** Metadata stored for each loaded plugin */
+export interface PluginMetadata {
+    readonly id: string;
+    readonly name?: string;
+    readonly pluginType: string;
+    readonly version: string;
+    readonly description?: string;
+    readonly dependencies?: { id: string; version: string }[];
+    /** Absolute path to the plugin directory */
+    readonly dir: string;
 }
 
 export interface PluginManifest {
@@ -84,8 +105,20 @@ export class PluginNotFoundError extends Error {
 
     constructor(id: string) {
         super(`Plugin "${id}" not found`);
-
+        this.name = 'PluginNotFoundError';
         this.id = id;
+    }
+}
+
+export class ManifestNotFoundError extends Error {
+    public readonly pluginId: string;
+    public readonly dir: string;
+
+    constructor(pluginId: string, dir: string) {
+        super(`Manifest not found for plugin "${pluginId}" in "${dir}"`);
+        this.name = 'ManifestNotFoundError';
+        this.pluginId = pluginId;
+        this.dir = dir;
     }
 }
 
