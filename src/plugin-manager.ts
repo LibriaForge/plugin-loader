@@ -1,9 +1,9 @@
-import { FSWatcher, watch } from 'chokidar';
+import {FSWatcher, watch} from 'chokidar';
 
-import { DefaultPluginContext } from './default-plugin-context';
-import { findPlugins } from './find-plugins';
-import { topologicalSort } from './helpers';
-import { loadPlugin, clearPluginCache } from './load-plugin';
+import {DefaultPluginContext} from './default-plugin-context';
+import {findPlugins} from './find-plugins';
+import {topologicalSort} from './helpers';
+import {loadPlugin, clearPluginCache} from './load-plugin';
 import {
     ManifestNotFoundError,
     PluginManifest,
@@ -47,6 +47,15 @@ export class PluginManager {
         for (const manifest of sortedManifests) {
             await this.loadSinglePlugin(manifest);
         }
+    }
+
+    public async discoverPlugins(...patterns: string[]): Promise<PluginMetadata[]> {
+        const allManifests: PluginManifest[] = [];
+        for (const pattern of patterns) {
+            const manifests = await findPlugins(pattern);
+            allManifests.push(...manifests);
+        }
+        return allManifests.map(manifestToMetadata);
     }
 
     private async loadSinglePlugin(manifest: PluginManifest): Promise<void> {
