@@ -1,6 +1,6 @@
 {
   "name": "@libria/plugin-loader",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Simple plugin loader for Node.js applications",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
@@ -18,7 +18,9 @@
   },
   "type": "module",
   "scripts": {
-    "build": "tsdown",
+    "build": "npm run typecheck && cross-env NODE_ENV=production tsdown",
+    "build:dev": "tsdown",
+    "typecheck": "tsc --noEmit",
     "test": "vitest",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
@@ -53,6 +55,7 @@
     "@typescript-eslint/eslint-plugin": "^8.53.1",
     "@typescript-eslint/parser": "^8.53.1",
     "@vitest/coverage-v8": "^4.0.18",
+    "cross-env": "^10.1.0",
     "dotenv": "^17.2.3",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
